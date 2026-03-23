@@ -1,45 +1,40 @@
---- a/src/app_components.cpp	2024-08-13 00:00:15.000000000 +0800
-+++ b/src/app_components.cpp	2026-03-23 18:27:25.339323408 +0800
-@@ -6,7 +6,9 @@
+--- a/src/app_components.cpp
++++ b/src/app_components.cpp
+@@ -6,7 +6,7 @@
   */
  
  #include <thread>
-+#if __has_include(<execution>)
- #include <execution>
-+#endif
+-#include <execution>
++#include <algorithm>
  #include <iostream>
  #include <fstream>
  #include <filesystem>
-@@ -161,11 +163,7 @@
+@@ -161,11 +161,10 @@
  		});
    */
    if (potentialsOutputAndStop) {
--    std::for_each(
+     std::for_each(
 -		  std::execution::seq, 
--		  potentials.begin(),
--		  potentials.end(),
--		  [](Rational p)
-+    for (const auto& p : potentials)
+ 		  potentials.begin(),
+ 		  potentials.end(),
+ 		  [](Rational p)
  		  {
  		    auto nd = p.numeratorDenominator();
  		    int n(nd.first.toInt()), d(nd.second.toInt());
-@@ -177,16 +175,12 @@
+@@ -177,16 +176,15 @@
  		      std::cerr << "can't open " << filename.str() << std::endl;
  		    of << n << std::endl << d << std::endl;
  		    of.close();
--		  });
-+		  }
+ 		  });
    } else {
--    std::for_each(
+     std::for_each(
 -		  std::execution::par,//fails to trigger parallelism
--		  potentials.begin(),
--		  potentials.end(),
--		  [pc,minConePotential,maxConePotential,saveNoncomets](Rational p)
-+    for (const auto& p : potentials)
+ 		  potentials.begin(),
+ 		  potentials.end(),
+ 		  [pc,minConePotential,maxConePotential,saveNoncomets](Rational p)
  		  {
  		    isSliceGood(pc,p,minConePotential,maxConePotential,saveNoncomets); 
--		  });
-+		  }
+ 		  });
    }
  }
  

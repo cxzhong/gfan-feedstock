@@ -3,9 +3,10 @@
 export CPPFLAGS="-DNOCDDPREFIX -DDISABLE_COMMENTATOR $CPPFLAGS"
 export LDFLAGS="$LDFLAGS -lcddgmp -lgmp -lm"
 export CFLAGS="-fPIC $CFLAGS"
-export CXXFLAGS="-DNOCDDPREFIX -fPIC -I${PREFIX}/include/cddlib $CXXFLAGS"
+export CXXFLAGS="-DNOCDDPREFIX -fPIC -std=c++20 -I${PREFIX}/include/cddlib $CXXFLAGS"
 
 if [[ "$target_platform" == osx-* ]]; then
+  export CXXFLAGS="$CXXFLAGS -fexperimental-library"
   find ${SRC_DIR}/src -type f -print0 | xargs -0 sed -i '' "s/log2/logger2/g"
 fi
 
