@@ -42,6 +42,7 @@ requirements:
 test:
   commands:
     - test -f ${PREFIX}/bin/gfan
+    - gfan _version
 
 about:
   home: http://home.math.au.dk/jensen/software/gfan/gfan.html

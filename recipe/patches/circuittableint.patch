@@ -10,7 +10,35 @@
    template <> struct MyMakeUnsigned<__int128>{typedef unsigned __int128 type;};
  
    class MVMachineIntegerOverflow: public std::exception
-@@ -591,8 +594,8 @@
+@@ -88,8 +91,27 @@
++// On macOS, long int and long long int are distinct C++ types (both 64-bit),
++// but __int64_t aliases long long. extMul(int,int) returns long int, making
++// toStr calls ambiguous. Add explicit overloads for long/unsigned long.
+ static std::string toStr(__uint32_t b)
+ {
+ 	std::stringstream s;
+ 	s<<b;
+ 	return s.str();
+ }
+ 
++#ifdef __APPLE__
++static std::string toStr(long int b)
++{
++	std::stringstream s;
++	s<<b;
++	return s.str();
++}
++
++static std::string toStr(unsigned long int b)
++{
++	std::stringstream s;
++	s<<b;
++	return s.str();
++}
++#endif
++
+ class my256s{
+@@ -591,8 +613,8 @@
  	    ret=min;
  
  	    {
