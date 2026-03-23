@@ -1,8 +1,6 @@
-diff --git a/Makefile b/Makefile
-index 9556cf4..40127b6 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -22,20 +22,8 @@ STACTDUMP_OPTIONS = -DSTACKDUMP_ENABLED -D__assert_fail=__assert_fail2
+@@ -22,20 +22,9 @@
  endif
  
  
@@ -17,14 +15,14 @@ index 9556cf4..40127b6 100644
 -sage_link.so: sage_link.pyx setup.py
 -	python setup.py build_ext --inplace --pyrex-include-dirs=$(SAGE_ROOT)/devel/sage/
 -endif
--
+ 
  ifeq ($(gmppath),)
 -GMP_LINKOPTIONS = -lgmp
 +GMP_LINKOPTIONS = -lgmp -lm
  GMP_INCLUDEOPTIONS =
  else
  GMP_LINKOPTIONS = $(gmppath)/lib/libgmp.a
-@@ -49,7 +37,7 @@ CDDDEFINE_PREFIX = -DNOCDDPREFIX
+@@ -49,7 +38,7 @@
  endif
  
  ifeq ($(cddpath),)
@@ -33,9 +31,9 @@ index 9556cf4..40127b6 100644
  CDD_INCLUDEOPTIONS =
  else
  CDD_LINKOPTIONS = $(cddpath)/lib/libcddgmp.a
-@@ -71,37 +59,8 @@ SOPLEX_OBJECTS = lp_soplexcdd.o
+@@ -76,37 +65,8 @@
+ VECTORISE = -mavx -msse2
  endif
- 
  
 -# rememember to adjust USEFACTORY in field_rationalfunctions2
 -ifeq ($(singular),)
@@ -73,25 +71,26 @@ index 9556cf4..40127b6 100644
  
  
  MKDIR=mkdir -p
-@@ -110,10 +69,8 @@ MKDIR=mkdir -p
- PREFIX =
+@@ -117,10 +77,8 @@
  SHELL       = /bin/sh
  #ARCH        = LINUX
+ 
 -CC          = $(PREFIX)gcc
 -CLINKER     = $(CC)
 -CXX         = $(PREFIX)g++
 -CCLINKER    = $(CXX)
 +CC          ?= $(PREFIX)gcc
 +CXX         ?= $(PREFIX)g++
- #OPTFLAGS    = -O2 -DGMPRATIONAL -DNDEBUG
- # Note that gcc produces wrong code with -O3
- OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -fno-omit-frame-pointer -O2	 #-O3 -fno-guess-branch-probability #-DNDEBUG
-@@ -125,10 +82,10 @@ OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -fno-omit-frame-pointer -O2	 #-O3 -
+ 
+ #CC          = $(PREFIX)gcc-8.1
+ #CLINKER     = $(CC)
+@@ -139,11 +97,10 @@
  #OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -fno-omit-frame-pointer -O3 -msse2 -ftree-vectorizer-verbose=2 -ffast-math #-DNDEBUG
  #OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -fno-omit-frame-pointer -O3 -mavx -msse2 -ftree-vectorizer-verbose=2 -ffast-math #-DNDEBUG
  
--CFLAGS	  = $(OPTFLAGS) $(GPROFFLAG) $(STACTDUMP_OPTIONS) $(ADDITIONALINCLUDEOPTIONS) -std=c++0x -g $(CDDDEFINE_PREFIX) #-pedantic
--#CFLAGS	  = $(OPTFLAGS) $(GPROFFLAG) $(STACTDUMP_OPTIONS) $(ADDITIONALINCLUDEOPTIONS) -D_GLIBCXX_DEBUG -std=c++0x -g $(CDDDEFINE_PREFIX) #-pedantic
+-CFLAGS	  = $(OPTFLAGS) $(GPROFFLAG) $(STACTDUMP_OPTIONS) $(ADDITIONALINCLUDEOPTIONS) -g $(CDDDEFINE_PREFIX) -std=c++2a #-pedantic
+-#CFLAGS	  = $(OPTFLAGS) $(GPROFFLAG) $(STACTDUMP_OPTIONS) $(ADDITIONALINCLUDEOPTIONS) -std=c++0x -g $(CDDDEFINE_PREFIX) #-pedantic
+-#CFLAGS	  = $(OPTFLAGS) $(GPROFFLAG) $(STACTDUMP_OPTIONS) $(ADDITIONALINCLUDEOPTIONS) -D_GLIBCXX_DEBUG -g $(CDDDEFINE_PREFIX) #-pedantic
 -CCFLAGS	  = $(CFLAGS)
 -FFLAGS	  = $(OPTFLAGS)
 +CFLAGS	  := $(CFLAGS) $(OPTFLAGS) $(GPROFFLAG) $(ADDITIONALINCLUDEOPTIONS) #-pedantic
@@ -101,7 +100,7 @@ index 9556cf4..40127b6 100644
  
  CATSOBJECTS =	lp_cdd.o \
  		parser.o \
-@@ -394,16 +351,15 @@ EXECS	  = $(MAIN)
+@@ -420,16 +377,15 @@
  # (compiling with gcc version 4.7.2 and running gfan _tropicaltraverse on a starting cone for Grassmann3_7)
  # Either this is a bug in the code or in the compiler. The bug disappears by compiling with -fno-guess-branch-probability
  src/symmetrictraversal.o: src/symmetrictraversal.cpp
@@ -114,13 +113,13 @@ index 9556cf4..40127b6 100644
  # Define suffixes to make the program compile on legolas.imf.au.dk :
  .SUFFIXES: .o .cpp .c
  
- OBJECTS = 	$(addprefix src/,$(SOPLEX_OBJECTS)) \
+ OBJECTS1 = 	$(addprefix src/,$(SOPLEX_OBJECTS)) \
  		$(SINGULAR_OBJECTS) \
 -		$(SAGE_OBJECTS) \
  		$(addprefix src/,$(CATSOBJECTS)) \
  		$(addprefix src/,$(APPOBJECTS)) \
  		src/symmetrictraversal.o
-@@ -420,7 +376,7 @@ default: $(OBJECTS) $(ADDITIONALOBJECTS) $(EXECS)
+@@ -508,7 +464,7 @@
  
  $(MAIN): $(OBJECTS)
  #	$(CCLINKER) $(OBJECTS) $(ADDITIONALLINKOPTIONS) $(GPROFFLAG) -lpthread  -o $(MAIN)
@@ -129,7 +128,7 @@ index 9556cf4..40127b6 100644
  
  release:
  	rm -f -r $(RELEASEDIR)/*
-@@ -546,7 +502,7 @@ check:
+@@ -634,7 +590,7 @@
  .c.o:
  	$(CC) $(CFLAGS) -c $< -o $(patsubst %.c,%.o,$<)
  .cpp.o:
