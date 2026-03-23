@@ -10,6 +10,7 @@ if [[ "$target_platform" == "osx-64" ]]; then
 fi
 
 make -j${CPU_COUNT}
+make check
 mkdir -p "$PREFIX/bin"
 cp -pf gfan "$PREFIX/bin/"
 cd "$PREFIX/bin"

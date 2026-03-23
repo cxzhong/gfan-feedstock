@@ -14,6 +14,10 @@ source:
     - patches/nodel.patch  # [osx]
     # patch Makefile to use CXXFLAGS, LDFLAGS, etc.
     - patches/Makefile.patch
+    # use std::pmr instead of std::experimental::pmr (libc++ compatibility)
+    - patches/pmr.patch
+    # fix CircuitTableIntPOD construction from int (no implicit constructor)
+    - patches/circuittableint.patch
 
 build:
   number: 0

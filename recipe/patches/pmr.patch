@@ -1,0 +1,115 @@
+--- a/src/gfanlib_memoryresource.h
++++ b/src/gfanlib_memoryresource.h
+@@ -6,18 +6,41 @@
+  *      Author: anders
+  */
+ 
++#if __has_include(<memory_resource>)
++#include <memory_resource>
++#else
+ #include <experimental/memory_resource>
++#endif
+ #include <iostream>
++#if __has_include(<memory_resource>)
++#include <vector>
++#else
+ #include <experimental/vector>
++#endif
+ #include <assert.h>
+ 
++#if __has_include(<memory_resource>)
++namespace gfan_pmr = std::pmr;
++#else
++namespace gfan_pmr = std::experimental::pmr;
++#endif
++
++
+ 
+ /*In compiler explorer wih gcc8.1 -std=c++17 -O3
+  *
+  * #include <vector>
+ 
++#if __has_include(<memory_resource>)
++#include <memory_resource>
++#else
+ #include <experimental/memory_resource>
++#endif
++#if __has_include(<memory_resource>)
++#include <vector>
++#else
+ #include <experimental/vector>
++#endif
+ 
+ class MyInt{
+ public:
+@@ -34,7 +57,7 @@
+ 	//				 t.a=0;
+ 				 for(int i=0;i<100000;i++)
+ 					 {
+-						 std::experimental::pmr::vector<MyInt> A(100000,t/*	,&stackResource/);
++						 gfan_pmr::vector<MyInt> A(100000,t/*	,&stackResource/);
+ 						 //A.resize(100000,MyInt{});
+ 					 }
+ 			 }
+@@ -42,9 +65,9 @@
+ 
+ template<typename a>
+ //using std::experimental::pmr pmr;
+-using pmrvector=std::experimental::pmr::vector<a>;
+-typedef std::experimental::pmr::memory_resource MR; //Maybe this should be polymorphic_allocator<byte> instead - at least for the constructors using these
+-using std::experimental::pmr::get_default_resource;
++using pmrvector=gfan_pmr::vector<a>;
++typedef gfan_pmr::memory_resource MR; //Maybe this should be polymorphic_allocator<byte> instead - at least for the constructors using these
++using gfan_pmr::get_default_resource;
+ 
+ //DELETE
+ class ResourceWrapper: public MR{
+@@ -76,7 +99,7 @@
+ 	}
+ };
+ 
+-class StackResource: public std::experimental::pmr::memory_resource{
++class StackResource: public gfan_pmr::memory_resource{
+   /*
+    *
+    * Layout of memory
+@@ -98,7 +121,7 @@
+ 	The header is 4 byte aligned, while the alignment of each block is specified at allocation.
+    */
+ public:
+-  std::experimental::pmr::vector<char> mem;
++  gfan_pmr::vector<char> mem;
+   int topHeader;
+   int nbytes;
+   memory_resource* parentResource;
+@@ -124,8 +147,8 @@
+ 	  return (firstPossible+((align-1)|(minimumAlignment-1)))& ~((align-1)|(minimumAlignment-1));
+   }
+   StackResource(int nbytes_,
+-		memory_resource* parentResource_=std::experimental::pmr::new_delete_resource(),
+-		memory_resource* fallBackResource_=std::experimental::pmr::null_memory_resource()):
++		memory_resource* parentResource_=gfan_pmr::new_delete_resource(),
++		memory_resource* fallBackResource_=gfan_pmr::null_memory_resource()):
+ 	topHeader(0),
+     nbytes(nbytes_),
+     mem(nbytes_,parentResource_),
+@@ -254,7 +277,7 @@
+ };
+ 
+ 
+-std::string memoryResourceToString(const std::experimental::pmr::memory_resource *mr);
++std::string memoryResourceToString(const gfan_pmr::memory_resource *mr);
+ 
+ // DELETE?
+ class ResourceInvariant
+--- a/src/gfanlib_memoryresource.cpp
++++ b/src/gfanlib_memoryresource.cpp
+@@ -10,7 +10,7 @@
+ StackResource stackResource(10160000);
+ StackResource stackResource2(10160000);
+ 
+-std::string memoryResourceToString(const std::experimental::pmr::memory_resource *mr)
++std::string memoryResourceToString(const gfan_pmr::memory_resource *mr)
+ {
+ 	if(get_default_resource()==mr)
+ 	{

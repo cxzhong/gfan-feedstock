@@ -1,0 +1,13 @@
+--- a/src/gfanlib_circuittableint.h
++++ b/src/gfanlib_circuittableint.h
+@@ -591,8 +591,8 @@
+ 	    ret=min;
+ 
+ 	    {
+-	    	auto ret2=CircuitTableIntPOD((s.v*denominatorDivisor.multiplicativeInverse)*boundA.v);
+-	    	ret2=MIN(ret2.v,-ret2.v);
++	    	CircuitTableIntPOD ret2; ret2.v=(s.v*denominatorDivisor.multiplicativeInverse)*boundA.v;
++	    	ret2.v=MIN(ret2.v,-ret2.v);
+ 	    	return ret2;
+ 	    	if(ret.v!=ret2.v)
+ 	    	{
