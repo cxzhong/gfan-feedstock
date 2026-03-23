@@ -3,7 +3,7 @@
 
 package:
   name: {{ name }}
-  version: {{ version }}
+  version: "{{ version }}"
 
 source:
   fn: {{ name }}{{ version }}.tar.gz
@@ -22,6 +22,8 @@ build:
 requirements:
   build:
     - {{ compiler('cxx') }}
+    - {{ compiler('c') }}
+    - {{ stdlib('c') }}
     - make
     - gfan  # [build_platform != target_platform]
   host:
