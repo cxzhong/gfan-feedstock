@@ -3,7 +3,7 @@
 export CPPFLAGS="-DNOCDDPREFIX -DDISABLE_COMMENTATOR $CPPFLAGS"
 export LDFLAGS="$LDFLAGS -lcddgmp -lgmp -lm"
 export CFLAGS="-fPIC $CFLAGS"
-export CXXFLAGS="-DNOCDDPREFIX -fPIC -std=c++20 -I${PREFIX}/include/cddlib $CXXFLAGS"
+export CXXFLAGS="-DNOCDDPREFIX -fPIC -I${PREFIX}/include/cddlib $CXXFLAGS -std=c++20"
 
 if [[ "$target_platform" == osx-* ]]; then
   export CXXFLAGS="$CXXFLAGS -fexperimental-library"
