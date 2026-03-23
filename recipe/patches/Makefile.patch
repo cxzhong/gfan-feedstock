@@ -84,6 +84,15 @@
  
  #CC          = $(PREFIX)gcc-8.1
  #CLINKER     = $(CC)
+@@ -130,7 +88,7 @@
+ #OPTFLAGS    = -O2 -DGMPRATIONAL -DNDEBUG
+ # Note that gcc produces wrong code with -O3
+ # OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -O3 -fno-omit-frame-pointer -fdelete-null-pointer-checks -fno-inline-functions -fno-inline-small-functions#-fno-common  #-fno-inline-functions #-D_GLIBCXX_DEBUG #-O2	 #-O3 -fno-guess-branch-probability #-DNDEBUG
+-OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -O3  $(VECTORISE)  -finline-limit=1000 -ffast-math -fno-omit-frame-pointer -fno-inline-functions -fdelete-null-pointer-checks #-D_GLIBCXX_DEBUG #-fno-inline-functions -fno-inline-small-functions#-fno-common  #-fno-inline-functions #-D_GLIBCXX_DEBUG #-O2	 #-O3 -fno-guess-branch-probability #-DNDEBUG
++OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -O2 -fno-omit-frame-pointer #-D_GLIBCXX_DEBUG #-fno-inline-functions -fno-inline-small-functions#-fno-common  #-fno-inline-functions #-D_GLIBCXX_DEBUG #-O2	 #-O3 -fno-guess-branch-probability #-DNDEBUG
+ #OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -fno-omit-frame-pointer -O3 -mavx -msse2  -finline-limit=1000 -ffast-math -Wuninitialized # -fno-guess-branch-probability #-DNDEBUG -ftree-vectorizer-verbose=2
+ #OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -fno-omit-frame-pointer -O1             -fno-guess-branch-probability
+  #-DNDEBUG
 @@ -139,11 +97,10 @@
  #OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -fno-omit-frame-pointer -O3 -msse2 -ftree-vectorizer-verbose=2 -ffast-math #-DNDEBUG
  #OPTFLAGS    =  -DGMPRATIONAL -Wuninitialized -fno-omit-frame-pointer -O3 -mavx -msse2 -ftree-vectorizer-verbose=2 -ffast-math #-DNDEBUG
