@@ -1,5 +1,5 @@
---- a/src/gfanlib_circuittableint.h
-+++ b/src/gfanlib_circuittableint.h
+--- a/src/gfanlib_circuittableint.h	2024-08-13 00:00:15.000000000 +0800
++++ b/src/gfanlib_circuittableint.h	2026-03-23 18:15:56.115403092 +0800
 @@ -25,6 +25,9 @@
    template<typename> struct MyMakeUnsigned;
    template <> struct MyMakeUnsigned<int>{typedef unsigned int type;};
@@ -10,17 +10,13 @@
    template <> struct MyMakeUnsigned<__int128>{typedef unsigned __int128 type;};
  
    class MVMachineIntegerOverflow: public std::exception
-@@ -88,8 +91,27 @@
-+// On macOS, long int and long long int are distinct C++ types (both 64-bit),
-+// but __int64_t aliases long long. extMul(int,int) returns long int, making
-+// toStr calls ambiguous. Add explicit overloads for long/unsigned long.
- static std::string toStr(__uint32_t b)
- {
- 	std::stringstream s;
- 	s<<b;
+@@ -92,6 +95,25 @@
  	return s.str();
  }
  
++// On macOS, long int and long long int are distinct C++ types (both 64-bit),
++// but __int64_t aliases long long. extMul(int,int) returns long int, making
++// toStr calls ambiguous. Add explicit overloads for long/unsigned long.
 +#ifdef __APPLE__
 +static std::string toStr(long int b)
 +{
@@ -38,7 +34,25 @@
 +#endif
 +
  class my256s{
-@@ -591,8 +613,8 @@
+ public:
+ 	__int128_t lo,hi;
+@@ -214,6 +236,15 @@
+ 	return ((__int128_t)a)*((__int128_t)b);
+ }
+ 
++// On macOS, long long int is a distinct type from long int (both 64-bit).
++// CircuitTableInt64 uses long long as word type, needing this overload.
++#ifdef __APPLE__
++static __int128_t extMul(long long int a, long long int b)
++{
++	return ((__int128_t)a)*((__int128_t)b);
++}
++#endif
++
+ static __uint128_t unsignedProd64(uint64_t x,uint64_t y)
+ {
+ 	return __uint128_t(x)*__uint128_t(y);
+@@ -591,8 +622,8 @@
  	    ret=min;
  
  	    {
