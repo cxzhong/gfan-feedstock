@@ -18,6 +18,8 @@ source:
     - patches/pmr.patch
     # fix CircuitTableIntPOD construction from int (no implicit constructor)
     - patches/circuittableint.patch
+    # add missing #include <cstdint> and #include <atomic>
+    - patches/missing_includes.patch
 
 build:
   number: 0

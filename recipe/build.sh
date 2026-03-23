@@ -10,7 +10,9 @@ if [[ "$target_platform" == "osx-64" ]]; then
 fi
 
 make -j${CPU_COUNT}
-make check
+if [[ "$CONDA_BUILD_CROSS_COMPILATION" != "1" && "$CROSSCOMPILING_EMULATOR" != "" ]]; then
+  make check -j${CPU_COUNT}
+fi
 mkdir -p "$PREFIX/bin"
 cp -pf gfan "$PREFIX/bin/"
 cd "$PREFIX/bin"

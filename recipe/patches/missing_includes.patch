@@ -1,0 +1,28 @@
+Add missing #include <cstdint> and #include <atomic> for C++17/C++20 compliance.
+
+GCC on aarch64 does not transitively include these headers, causing build failures.
+
+diff --git a/src/gfanlib_z.h b/src/gfanlib_z.h
+index 1111111..2222222 100644
+--- a/src/gfanlib_z.h
++++ b/src/gfanlib_z.h
+@@ -8,6 +8,7 @@
+ #ifndef LIB_Z_H_
+ #define LIB_Z_H_
+ 
++#include <cstdint>
+ #include <string.h>
+ #include <ostream>
+ #include <iostream>
+diff --git a/src/gfanlib_hypersurfaceintersection.h b/src/gfanlib_hypersurfaceintersection.h
+index 3333333..4444444 100644
+--- a/src/gfanlib_hypersurfaceintersection.h
++++ b/src/gfanlib_hypersurfaceintersection.h
+@@ -11,6 +11,7 @@
+ 
+ #include "gfanlib_tableau.h"
+ #include <functional>
++#include <atomic>
+ 
+ namespace gfan{
+ 
