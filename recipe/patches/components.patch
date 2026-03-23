@@ -1,15 +1,17 @@
 --- a/src/app_components.cpp
 +++ b/src/app_components.cpp
-@@ -6,7 +6,7 @@
+@@ -6,7 +6,10 @@
   */
  
  #include <thread>
--#include <execution>
++#if __has_include(<execution>)
+ #include <execution>
++#endif
 +#include <algorithm>
  #include <iostream>
  #include <fstream>
  #include <filesystem>
-@@ -161,11 +161,10 @@
+@@ -161,11 +164,10 @@
  		});
    */
    if (potentialsOutputAndStop) {
@@ -21,7 +23,7 @@
  		  {
  		    auto nd = p.numeratorDenominator();
  		    int n(nd.first.toInt()), d(nd.second.toInt());
-@@ -177,16 +176,15 @@
+@@ -177,16 +179,15 @@
  		      std::cerr << "can't open " << filename.str() << std::endl;
  		    of << n << std::endl << d << std::endl;
  		    of.close();
