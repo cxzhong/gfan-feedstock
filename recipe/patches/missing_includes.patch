@@ -1,4 +1,4 @@
-Add missing #include <cstdint> and #include <atomic> for C++17/C++20 compliance.
+Add missing #include <cstdint>, #include <atomic>, and #include <memory> for C++17/C++20 compliance.
 
 GCC on aarch64 does not transitively include these headers, causing build failures.
 
@@ -26,3 +26,15 @@ index 3333333..4444444 100644
  
  namespace gfan{
  
+diff --git a/src/app_anton.h b/src/app_anton.h
+index 5555555..6666666 100644
+--- a/src/app_anton.h
++++ b/src/app_anton.h
+@@ -5,6 +5,7 @@
+ #include <unordered_map>
+ #include <set>
+ #include <algorithm>
++#include <memory>
+ #include "parser.h"
+ #include "gfanapplication.h"
+ #include "linalg.h"
