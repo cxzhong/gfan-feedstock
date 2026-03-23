@@ -4,28 +4,21 @@
    template<typename> struct MyMakeUnsigned;
    template <> struct MyMakeUnsigned<int>{typedef unsigned int type;};
    template <> struct MyMakeUnsigned<long int>{typedef unsigned long int type;};
-+  // On some platforms (e.g. macOS), long long is a distinct type from long int
-+  // even when they have the same size. int64_t may alias either one.
++  // long int and long long int are distinct C++ types; on LP64 platforms such as
++  // macOS both are 64-bit, but int64_t may alias either one depending on the ABI.
 +  template <> struct MyMakeUnsigned<long long int>{typedef unsigned long long int type;};
    template <> struct MyMakeUnsigned<__int128>{typedef unsigned __int128 type;};
  
    class MVMachineIntegerOverflow: public std::exception
-@@ -92,6 +95,25 @@
+@@ -92,6 +95,18 @@
  	return s.str();
  }
  
-+// On macOS, long int and long long int are distinct C++ types (both 64-bit),
-+// but __int64_t aliases long long. extMul(int,int) returns long int, making
-+// toStr calls ambiguous. Add explicit overloads for long/unsigned long.
-+#ifdef __APPLE__
++// On platforms where int64_t aliases long long int (such as macOS with Clang),
++// long int and long long int are distinct types. A long int argument has no
++// exact toStr() match among the __int64_t/__int128_t overloads, causing ambiguity.
++#ifdef _64BITLONGINT
 +static std::string toStr(long int b)
-+{
-+	std::stringstream s;
-+	s<<b;
-+	return s.str();
-+}
-+
-+static std::string toStr(unsigned long int b)
 +{
 +	std::stringstream s;
 +	s<<b;
@@ -36,13 +29,14 @@
  class my256s{
  public:
  	__int128_t lo,hi;
-@@ -214,6 +236,15 @@
+@@ -214,6 +229,16 @@
  	return ((__int128_t)a)*((__int128_t)b);
  }
  
-+// On macOS, long long int is a distinct type from long int (both 64-bit).
-+// CircuitTableInt64 uses long long as word type, needing this overload.
-+#ifdef __APPLE__
++// On platforms where int64_t aliases long long int (such as macOS), the word type
++// of CircuitTableInt64POD is long long int, which is distinct from long int even
++// when both are 64-bit. This overload resolves extMul calls with int64_t arguments.
++#ifdef _64BITLONGINT
 +static __int128_t extMul(long long int a, long long int b)
 +{
 +	return ((__int128_t)a)*((__int128_t)b);
@@ -52,7 +46,7 @@
  static __uint128_t unsignedProd64(uint64_t x,uint64_t y)
  {
  	return __uint128_t(x)*__uint128_t(y);
-@@ -591,8 +622,8 @@
+@@ -591,8 +616,8 @@
  	    ret=min;
  
  	    {
