@@ -45,6 +45,12 @@ test:
   commands:
     - test -f ${PREFIX}/bin/gfan
     - gfan _version
+    # Compute Groebner bases
+    - echo 'Q[x,y,z]{x^2+y+z,x+y^2+z,x+y+z^2}' | gfan _bases | head -1
+    # Compute a Groebner fan and check its f-vector
+    - echo 'Q[a,b,c]{a^3+b^2c-a,c^2-2/3b}' | gfan _bases | gfan _topolyhedralfan | grep F_VECTOR
+    # Compute a lattice ideal
+    - echo '{(2,-1,0),(3,0,-1)}' | gfan _latticeideal | grep x0
 
 about:
   home: http://home.math.au.dk/jensen/software/gfan/gfan.html
