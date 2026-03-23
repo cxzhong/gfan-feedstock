@@ -11,32 +11,3 @@
  #include <iostream>
  #include <fstream>
  #include <filesystem>
-@@ -161,11 +164,10 @@
- 		});
-   */
-   if (potentialsOutputAndStop) {
-     std::for_each(
--		  std::execution::seq, 
- 		  potentials.begin(),
- 		  potentials.end(),
- 		  [](Rational p)
- 		  {
- 		    auto nd = p.numeratorDenominator();
- 		    int n(nd.first.toInt()), d(nd.second.toInt());
-@@ -177,16 +179,15 @@
- 		      std::cerr << "can't open " << filename.str() << std::endl;
- 		    of << n << std::endl << d << std::endl;
- 		    of.close();
- 		  });
-   } else {
-     std::for_each(
--		  std::execution::par,//fails to trigger parallelism
- 		  potentials.begin(),
- 		  potentials.end(),
- 		  [pc,minConePotential,maxConePotential,saveNoncomets](Rational p)
- 		  {
- 		    isSliceGood(pc,p,minConePotential,maxConePotential,saveNoncomets); 
- 		  });
-   }
- }
- 
