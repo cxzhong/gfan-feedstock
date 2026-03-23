@@ -20,7 +20,7 @@ source:
     - patches/circuittableint.patch
     # add missing #include <cstdint> and #include <atomic>
     - patches/missing_includes.patch
-    # fix std::execution::seq/par unavailable on macOS libc++
+    # guard #include <execution> with __has_include, add <algorithm> for std::for_each
     - patches/components.patch
 
 build:
